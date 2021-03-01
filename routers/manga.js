@@ -64,8 +64,8 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.status = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
   obj.author = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(3) > td:nth-child(2)').text().trim();
   obj.type = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
-  obj.post_on = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(5) > td:nth-child(2) > time').text().trim();
   obj.last_update = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(6) > td:nth-child(2) > time').text().trim();
+  obj.last_chapter = $('#chapterlist > ul > li:nth-child(1) > div > div.eph-num > a > span.chapternum').text().trim();
 
   /* Set Manga Endpoint */
   obj.manga_endpoint = `https://westmanga.info/manga/${slug}/`;
@@ -73,7 +73,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   /* Get Manga Thumbnail */
   obj.thumb = element.find("div.thumb > img").attr("src");
 
-  element.find("div.seriestugenre > li").each((idx, el) => {
+  element.find("div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > div > tag").each((idx, el) => {
     let genre_name = $(el).find("a").text();
     genre_list.push({
       genre_name,
