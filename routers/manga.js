@@ -60,12 +60,8 @@ router.get("/manga/detail/:slug", async (req, res) => {
   const getMeta = element.find("div.seriestucon").first();
   obj.title = $('div.seriestuheader > h1.entry-title').text().trim();
 
-  obj.status = $(getMeta).eq(1).text().split(":").pop().trim();
-  obj.released = $(getMeta).eq(2).text().split(":").pop().trim();
-  obj.author = $(getMeta).eq(3).text().split(":").pop().trim();
-  obj.type = $(getMeta).eq(4).find('a').text();
-  obj.rating = $('div.num').find('content').text().split(' ')[1];
-  obj.lastUpdated = $(getMeta).eq(6).find('time').text();
+  /* Status */
+  obj.status = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
 
   /* Set Manga Endpoint */
   obj.manga_endpoint = `https://westmanga.info/manga/${slug}/`;
