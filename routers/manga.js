@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const cheerio = require("cheerio");
 const baseUrl = require("../constants/urls");
-const replaceMangaPage = "https://komiku.id/manga/";
+const replaceMangaPage = "https://westmanga.info/manga/";
 const AxiosService = require("../helpers/axiosService");
 
 // manga popular ----Ignore this for now --------
@@ -11,52 +11,38 @@ router.get("/manga/popular", async (req, res) => {
   });
 });
 
-//mangalist pagination  -------Done------
-router.get("/manga/page/:pagenumber", async (req, res) => {
-  let pagenumber = req.params.pagenumber;
-  let url = pagenumber === '1' ?'https://data.komiku.id/pustaka/'
-  :`https://data.komiku.id/pustaka/page/${pagenumber}/`;
-
+//serach manga ------Done-----------
+router.get("/search/:query", async (req, res) => {
+  const query = req.params.query;
+  const url = `https://westmanga.info/?s=${query}`;
+  // belom
   try {
     const response = await AxiosService(url);
-    console.log(url);
-    if (response.status === 200) {
-      const $ = cheerio.load(response.data);
-      const element = $(".perapih");
-      let manga_list = [];
-      let title, type, updated_on, endpoint, thumb, chapter;
-
-      element.find(".daftar > .bge").each((idx, el) => {
-        title = $(el).find(".kan > a").find("h3").text().trim();
-        endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "");
-        type = $(el).find(".bgei > a").find(".tpe1_inf > b").text();
-        updated_on = $(el).find(".kan > span").text().split("• ")[1].trim();
-        thumb = $(el).find(".bgei > a").find("img").attr("data-src");
-        chapter = $(el).find("div.kan > div:nth-child(5) > a > span:nth-child(2)").text();
-        manga_list.push({
-          title,
-          thumb,
-          type,
-          updated_on,
-          endpoint,
-          chapter,
-        });
+    const $ = cheerio.load(response.data);
+    const element = $(".listupd");
+    let manga_list = [];
+    let title, thumb, endpoint, last_chapter;
+    element.find(".bs").each((idx, el) => {
+      endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
+      thumb = $(el).find("div.bsx > a > img").attr("data-src");
+      title = $(el).find(".biggor > tt").text().trim();
+      last_chapter = $(el).find(".biggor > adds > exps").text().trim();
+      manga_list.push({
+        title,
+        thumb,
+        endpoint,
+        last_chapter,
       });
-      return res.status(200).json({
-        status: true,
-        message: "success",
-        manga_list,
-      });
-    }
-    return res.send({
-      message: response.status,
-      manga_list: [],
     });
-  } catch (err) {
+    res.json({
+      status: true,
+      message: "success",
+      manga_list
+    });
+  } catch (error) {
     res.send({
       status: false,
-      message: err,
-      manga_list: [],
+      message: error.message,
     });
   }
 });
@@ -67,7 +53,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   try {
     const response = await AxiosService("manga/"+slug);
   const $ = cheerio.load(response.data);
-  const element = $(".perapih");
+  const element = $(".terebody");
   let genre_list = [];
   let chapter = [];
   const obj = {};
@@ -125,239 +111,5 @@ router.get("/manga/detail/:slug", async (req, res) => {
     });
   }
 });
-
-//serach manga ------Done-----------
-router.get("/search/:query", async (req, res) => {
-  const query = req.params.query;
-  const url = `https://data.komiku.id/cari/?post_type=manga&s=${query}`;
-
-  try {
-    const response = await AxiosService(url);
-    const $ = cheerio.load(response.data);
-    const element = $(".daftar");
-    let manga_list = [];
-    let title, thumb, type, endpoint, updated_on;
-    element.find(".bge").each((idx, el) => {
-      endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
-      thumb = $(el).find("div.bgei > a > img").attr("data-src");
-      type = $(el).find("div.bgei > a > div.tpe1_inf > b").text();
-      title = $(el).find(".kan").find("h3").text().trim();
-      updated_on = $(el).find("div.kan > p").text().split('.')[0].trim();
-      manga_list.push({
-        title,
-        thumb,
-        type,
-        endpoint,
-        updated_on,
-      });
-    });
-    res.json({
-      status: true,
-      message: "success",
-      manga_list
-    });
-  } catch (error) {
-    res.send({
-      status: false,
-      message: error.message,
-    });
-  }
-});
-
-//genreList  -----Done-----
-router.get("/genres", async (req, res) => {
-  try {
-    const response = await AxiosService();
-
-    const $ = cheerio.load(response.data);
-    let list_genre = [];
-    let obj = {};
-    $('#Filter > form > select:nth-child(2)').find('option').each((idx,el)=>{
-      if($(el).text() !== 'Genre 1'){
-        const endpoint = $(el).text().trim().split(' ').join('-').toLowerCase()
-        list_genre.push({
-          genre_name:$(el).text(),
-          endpoint
-        })
-      }
-    })
-    obj.status = true
-    obj.message = 'success'
-    obj.list_genre = list_genre
-    res.json(obj);
-  } catch (error) {
-    res.send({
-      status: false,
-      message: error,
-    });
-  }
-});
-
-//genreDetail ----Done-----
-router.get("/genres/:slug/:pagenumber", async (req, res) => {
-  const slug = req.params.slug;
-  const pagenumber = req.params.pagenumber;
-  const url = pagenumber === '1' ?`https://data.komiku.id/pustaka/?orderby=modified&genre=${slug}&genre2=&status=&category_name=`
-  :`https://data.komiku.id/pustaka/page/${pagenumber}/?orderby=modified&genre=${slug}&genre2&status&category_name`;
-  try {
-    const response = await AxiosService(url);
-    const $ = cheerio.load(response.data);
-    const element = $(".daftar");
-    var thumb, title, endpoint, type;
-    var manga_list = [];
-    element.find(".bge").each((idx, el) => {
-      title = $(el).find(".kan").find("h3").text().trim();
-      endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "");
-      type = $(el).find("div.bgei > a > div").find("b").text();
-      thumb = $(el).find("div.bgei > a > img").attr("data-src");
-      manga_list.push({
-        title,
-        type,
-        thumb,
-        endpoint,
-      });
-    });
-    res.json({
-      status: true,
-      message: "success",
-      manga_list,
-    });
-  } catch (error) {
-    res.send({
-      status: false,
-      message: error,
-      manga_list: [],
-    });
-  }
-});
-
-//manga popular pagination ----- Done ------
-router.get("/manga/popular/:pagenumber", async (req, res) => {
-  const pagenumber = req.params.pagenumber;
-  const url = pagenumber === '1' ? `other/rekomendasi/` : `other/rekomendasi/page/${pagenumber}/`;
-
-  try {
-    const response = await AxiosService(url);
-    const $ = cheerio.load(response.data);
-    const element = $(".daftar");
-    let thumb, title, endpoint, type, upload_on;
-    let manga_list = [];
-    element.find(".bge").each((idx, el) => {
-      title = $(el).find(".kan").find("h3").text().trim();
-      endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
-      type = $(el).find("div.bgei > a > div.tpe1_inf > b").text();
-      thumb = $(el).find("div.bgei > a > img").attr("data-src");
-      upload_on = $(el).find("div.kan > p").text().split('.')[0].trim();
-      manga_list.push({
-        title,
-        type,
-        thumb,
-        endpoint,
-        upload_on,
-      });
-    });
-    res.json({
-      status: true,
-      message: "success",
-      manga_list,
-    });
-  } catch (error) {
-    res.send({
-      status: false,
-      message: error,
-      manga_list: [],
-    });
-  }
-});
-
-//recommended ---done---
-router.get("/recommended", async (req, res) => {
-  try {
-    const response = await AxiosService('other/hot/');
-
-    const $ = cheerio.load(response.data);
-    const element = $("div.daftar > .bge");
-    let manga_list = [];
-    let type, title, chapter, update, endpoint, thumb;
-    element.each((idx, el) => {
-      title = $(el).find("div.kan > a > h3").text().trim();
-      thumb = $(el).find("div.bgei > a > img").attr("data-src");
-      endpoint = $(el).find("div.kan > a").attr('href')
-        .replace('/manga/', "").replace(replaceMangaPage,'');
-      manga_list.push({
-        title,
-        chapter,
-        type,
-        thumb,
-        endpoint,
-        update,
-      });
-    });
-    return res.json({
-      status: true,
-      message: "success",
-      manga_list,
-    });
-  } catch (error) {
-    res.send({
-      message: error.message,
-    });
-  }
-});
-
-//manhua  ------Done------
-router.get("/manhua/:pagenumber", async (req, res) => {
-  await getManhuaManhwa(req, res, `manhua`);
-});
-
-//manhwa
-router.get("/manhwa/:pagenumber", async (req, res) => {
-  await getManhuaManhwa(req, res, `manhwa`);
-});
-
-const getManhuaManhwa = async (req, res, type) => {
-  let pagenumber = req.params.pagenumber;
-  let url = pagenumber === '1' ?`https://data.komiku.id/pustaka/?orderby=&category_name=${type}&genre=&genre2=&status=`
-  :`https://data.komiku.id/pustaka/page/${pagenumber}/?orderby&category_name=${type}&genre&genre2&status`;
-
-  try {
-    console.log(url);
-    const response = await AxiosService(url);
-    const $ = cheerio.load(response.data);
-    const element = $(".perapih");
-    var manga_list = [];
-    var title, type, updated_on, endpoint, thumb, chapter;
-
-    element.find(".daftar > .bge").each((idx, el) => {
-      title = $(el).find(".kan > a").find("h3").text().trim();
-      endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "");
-      type = $(el).find(".bgei > a").find(".tpe1_inf > b").text().trim();
-      updated_on = $(el).find(".kan > span").text().split("• ")[1].trim();
-      thumb = $(el).find(".bgei > a").find("img").attr("data-src");
-      chapter = $(el).find("div.kan > div:nth-child(5) > a > span:nth-child(2)").text();
-      manga_list.push({
-        title,
-        thumb,
-        type,
-        updated_on,
-        endpoint,
-        chapter,
-      });
-    });
-
-    res.status(200).json({
-      status: true,
-      message: "success",
-      manga_list,
-    });
-  } catch (error) {
-    console.log(error);
-    res.send({
-      status: false,
-      message: error,
-      manga_list: [],
-    });
-  }
-};
 
 module.exports = router;
