@@ -66,6 +66,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.type = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
   obj.last_update = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(6) > td:nth-child(2) > time').text().trim();
   obj.last_chapter = $('#chapterlist > ul > li:nth-child(1) > div > div.eph-num > a > span.chapternum').text().trim();
+  obj.rating = $('div.seriestucon > div.seriestucontent > div.seriestucontl > div.rating.bixbox > div > div.num').attr("content");
 
   /* Set Manga Endpoint */
   obj.manga_endpoint = `https://westmanga.info/manga/${slug}/`;
@@ -73,7 +74,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   /* Get Manga Thumbnail */
   obj.thumb = element.find("div.thumb > img").attr("src");
 
-  element.find("div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > div > tag").each((idx, el) => {
+  element.find("div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > div").each((idx, el) => {
     let genre_name = $(el).find("a").text();
     genre_list.push({
       genre_name,
