@@ -60,12 +60,12 @@ router.get("/manga/detail/:slug", async (req, res) => {
   const getMeta = element.find("div.seriestucon").first();
   obj.title = $('div.seriestuheader > h1.entry-title').text().trim();
 
-  const getMeta = element.find("div.seriestocont").first();
-  obj.status = $('table > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
-  obj.type = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
-  obj.author = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > td:nth-child(2)').text().trim();
-  obj.posted_on = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(5) > td:nth-child(2)').text().trim();
-  obj.last_update = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(6) > td:nth-child(2)').text().trim();
+  obj.status = $(getMeta).eq(1).text().split(":").pop().trim();
+  obj.released = $(getMeta).eq(2).text().split(":").pop().trim();
+  obj.author = $(getMeta).eq(3).text().split(":").pop().trim();
+  obj.type = $(getMeta).eq(4).find('a').text();
+  obj.rating = $('div.num').find('content').text().split(' ')[1];
+  obj.lastUpdated = $(getMeta).eq(6).find('time').text();
 
   /* Set Manga Endpoint */
   obj.manga_endpoint = `https://westmanga.info/manga/${slug}/`;
@@ -83,7 +83,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.genre_list = genre_list||[];
 
   /* Get Synopsis */
-  const getSinopsis = element.find("div.entry-content > entry-content-single").first();
+  const getSinopsis = element.find("div.entry-content").first();
   obj.synopsis = $(getSinopsis).find("p").text().trim();
 
   res.status(200).send(obj);
