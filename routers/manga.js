@@ -19,7 +19,7 @@ router.get("/search/:query", async (req, res) => {
   try {
     const response = await AxiosService(url);
     const $ = cheerio.load(response.data);
-    const element = $(".listupd");
+    const element = $(".content");
     let manga_list = [];
     let title, thumb, endpoint, last_chapter;
     element.find(".bs").each((idx, el) => {
