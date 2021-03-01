@@ -58,15 +58,15 @@ router.get("/manga/detail/:slug", async (req, res) => {
 
   /* Get Title, Type, Author, Status */
   const getMeta = element.find("div.seriestucon").first();
-  obj.title = $('div.seriestuheader > entry-title > h1').text().trim();
-  obj.status = $('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
-  obj.type = $('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
-  obj.author = $('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(3) > td:nth-child(2)').text().trim();
-  obj.posted_on = $('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(5) > td:nth-child(2)').text().trim();
-  obj.last_update = $('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(6) > td:nth-child(2)').text().trim();
+  obj.title = $('div.seriestuheader > h1.entry-title').text().trim();
+  obj.status = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
+  obj.type = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
+  obj.author = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > td:nth-child(2)').text().trim();
+  obj.posted_on = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(5) > td:nth-child(2)').text().trim();
+  obj.last_update = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(6) > td:nth-child(2)').text().trim();
 
   /* Set Manga Endpoint */
-  obj.manga_endpoint = slug;
+  obj.manga_endpoint = `https://westmanga.info/manga/${slug}/`;
 
   /* Get Manga Thumbnail */
   obj.thumb = element.find("div.thumb > img").attr("src");
