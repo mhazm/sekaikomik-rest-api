@@ -59,7 +59,9 @@ router.get("/manga/detail/:slug", async (req, res) => {
   /* Get Title, Type, Author, Status */
   const getMeta = element.find("div.seriestucon").first();
   obj.title = $('div.seriestuheader > h1.entry-title').text().trim();
-  obj.status = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
+
+  const getMeta = element.find("div.seriestocont").first();
+  obj.status = $('table > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
   obj.type = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
   obj.author = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > td:nth-child(2)').text().trim();
   obj.posted_on = element.find('div.seriestucontent > div.seriestucontentr > div.seriestocont > table.infotable > tbody > tr:nth-child(5) > td:nth-child(2)').text().trim();
@@ -81,7 +83,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.genre_list = genre_list||[];
 
   /* Get Synopsis */
-  const getSinopsis = element.find("div.entry-content entry-content-single").first();
+  const getSinopsis = element.find("div.entry-content > entry-content-single").first();
   obj.synopsis = $(getSinopsis).find("p").text().trim();
 
   res.status(200).send(obj);
