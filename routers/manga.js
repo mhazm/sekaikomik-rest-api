@@ -62,6 +62,10 @@ router.get("/manga/detail/:slug", async (req, res) => {
 
   /* Status */
   obj.status = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
+  obj.author = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(3) > td:nth-child(2)').text().trim();
+  obj.type = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
+  obj.post_on = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(5) > td:nth-child(2) > time').text().trim();
+  obj.last_update = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(6) > td:nth-child(2) > time').text().trim();
 
   /* Set Manga Endpoint */
   obj.manga_endpoint = `https://westmanga.info/manga/${slug}/`;
