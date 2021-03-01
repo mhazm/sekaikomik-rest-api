@@ -75,7 +75,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.thumb = element.find("div.thumb > img").attr("src");
 
   element.find("div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > div").each((idx, el) => {
-    let genre_name = $(el).find("a").text();
+    let genre_name = $(el).find("a").text().trim();
     genre_list.push({
       genre_name,
     });
