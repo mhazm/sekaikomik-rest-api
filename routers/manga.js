@@ -23,10 +23,10 @@ router.get("/search/:query", async (req, res) => {
     let manga_list = [];
     let title, thumb, endpoint, last_chapter;
     element.find("div.bs").each((idx, el) => {
-      endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
-      thumb = $(el).find("div.bsx > a > img").attr("data-src");
-      title = $(el).find("div.biggor > tt").text().trim();
-      last_chapter = $(el).find("div.biggor > adds > exps").text().trim();
+      endpoint = $(el).find("a").attr("href");
+      thumb = $(el).find("div.bsx > a > div.limit > img").attr("data-src");
+      title = $(el).find("div.biggor > div.tt").text().trim();
+      last_chapter = $(el).find("div.biggor > div.adds > div.exps").text().trim();
       manga_list.push({
         title,
         thumb,
