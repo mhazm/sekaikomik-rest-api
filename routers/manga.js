@@ -21,9 +21,9 @@ router.get("/search/:query", async (req, res) => {
     const $ = cheerio.load(response.data);
     const element = $("div.listupd");
     let manga_list = [];
-    let title, thumb, endpoint, last_chapter;
+    let title, thumb, endpoint ;
     element.find("div.bs").each((idx, el) => {
-      endpoint = $(el).find("a").attr("href");
+      endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
       thumb = $(el).find("div.bsx > a > div.limit > img").attr("src");
       title = $(el).find("a").attr("title");
       manga_list.push({
@@ -46,7 +46,7 @@ router.get("/search/:query", async (req, res) => {
 });
 
 // detail manga  ---- Done -----
-router.get("/manga/:slug", async (req, res) => {
+router.get("/manga/detail/:slug", async (req, res) => {
   const slug = req.params.slug;
   try {
     const response = await AxiosService("manga/"+slug);
