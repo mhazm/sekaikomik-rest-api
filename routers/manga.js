@@ -69,7 +69,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.rating = $('div.seriestucon > div.seriestucontent > div.seriestucontl > div.rating.bixbox > div > div.num').attr("content");
 
   /* Set Manga Endpoint */
-  obj.manga_endpoint = `https://westmanga.info/manga/${slug}/`;
+  obj.manga_endpoint = `https://westmanga.info/manga/${slug}`;
 
   /* Get Manga Thumbnail */
   obj.thumb = element.find("div.thumb > img").attr("src");
