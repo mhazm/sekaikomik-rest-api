@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const cheerio = require("cheerio");
 const baseUrl = require("../constants/urls");
-const replaceMangaPage = "https://westmanga.info/manga/";
+const replaceMangaPage = "https://sekaikomik.com/manga/";
 const AxiosService = require("../helpers/axiosService");
 
 // manga popular ----Ignore this for now --------
@@ -14,7 +14,7 @@ router.get("/manga/popular", async (req, res) => {
 //serach manga ------Done-----------
 router.get("/search/:query", async (req, res) => {
   const query = req.params.query;
-  const url = `https://westmanga.info/?s=${query}`;
+  const url = `https://sekaikomik.com/?s=${query}`;
   // belom
   try {
     const response = await AxiosService(url);
@@ -24,7 +24,7 @@ router.get("/search/:query", async (req, res) => {
     let title, thumb, endpoint ;
     element.find("div.bsx").each((idx, el) => {
       endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
-      thumb = $(el).find("div > div > a > div.limit > img").attr("src");
+      thumb = $(el).find("div.limit > img").attr("src");
       title = $(el).find("a").attr("title");
       manga_list.push({
         title,
