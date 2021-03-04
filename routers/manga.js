@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const cheerio = require("cheerio");
 const baseUrl = require("../constants/urls");
-const replaceMangaPage = "https://sekaikomik.com/manga/";
+const replaceMangaPage = "https://www.sekaikomik.com/manga/";
 const AxiosService = require("../helpers/axiosService");
 
 //serach manga ------Done-----------
@@ -14,7 +14,7 @@ router.get("/search/:query", async (req, res) => {
     const $ = cheerio.load(response.data);
     const element = $("div.listupd");
     let manga_list = [];
-    let title, thumb, endpoint ;
+    let title, thumb, endpoint, last_chapter ;
     element.find("div.bsx").each((idx, el) => {
       endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
       thumb = $(el).find("div.limit > img").attr("src");
@@ -24,6 +24,7 @@ router.get("/search/:query", async (req, res) => {
         title,
         thumb,
         endpoint,
+        last_chapter,
       });
     });
     res.json({
