@@ -19,7 +19,7 @@ router.get("/search/:query", async (req, res) => {
       endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
       thumb = $(el).find("div.limit > img").attr("src");
       title = $(el).find("a").attr("title");
-      last_chapter = $("#content > div.wrapper > div.postbody > div > div.listupd > div > div > a > div.bigor > div.adds > div.epxs").text();      
+      last_chapter = $(el).find("div.adds > div.epxs").text();      
       manga_list.push({
         title,
         thumb,
