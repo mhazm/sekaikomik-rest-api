@@ -59,7 +59,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   const GetMeta = element.find("div.tsinfo.bigbox").first();
   obj.status = $("div:nth-child(1) > i").text().trim();
   obj.author = $("div:nth-child(3) > i").text().trim();
-  obj.type = $("div:nth-child(2) > a").text().trim();
+  obj.type = $("div:nth-child(2) > a").text();
   obj.posted_on = $("div:nth-child(5) > i > time").text().trim();
   obj.last_update = $("div:nth-child(6) > i > time").text().trim();
   obj.last_chapter = $("div.lastend > div:nth-child(2) > a > span.epcur.epcurlast").text().trim();
@@ -81,7 +81,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.genre_list = genre_list||[];
 
   /* Get Synopsis */
-  const getSinopsis = element.find("div.entry-content").first();
+  const getSinopsis = element.find("div.main-info > div.info-right > div.info-desc.bixbox > div:nth-child(3) > div > p:nth-child(1)").first();
   obj.synopsis = $(getSinopsis).find("p").text().trim();
 
   res.status(200).send(obj);
