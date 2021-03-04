@@ -1,3 +1,3 @@
-const baseUrl = 'https://westmanga.info/'
+const baseUrl = 'https://sekaikomik.com/'
 
 module.exports = baseUrl
