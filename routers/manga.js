@@ -52,19 +52,21 @@ router.get("/manga/detail/:slug", async (req, res) => {
   const obj = {};
 
   /* Get Title */
-  const getMeta = element.find("div.seriestucon").first();
-  obj.title = $('div.seriestuheader > h1.entry-title').text().trim();
+  const getMeta = element.find("#titlemove").first();
+  obj.title = $("h1").text().trim();
 
   /* Status */
-  obj.status = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(1) > td:nth-child(2)').text().trim();
-  obj.author = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(3) > td:nth-child(2)').text().trim();
-  obj.type = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(2) > td:nth-child(2)').text().trim();
-  obj.last_update = $('div.seriestucon > div.seriestucontent > div.seriestucontentr > div.seriestucont > div > table > tbody > tr:nth-child(6) > td:nth-child(2) > time').text().trim();
-  obj.last_chapter = $('#chapterlist > ul > li:nth-child(1) > div > div.eph-num > a > span.chapternum').text().trim();
-  obj.rating = $('div.seriestucon > div.seriestucontent > div.seriestucontl > div.rating.bixbox > div > div.num').attr("content");
+  const GetMeta = element.find("div.tsinfo.bigbox").first();
+  obj.status = $("div:nth-child(1) > i").text().trim();
+  obj.author = $("div:nth-child(3) > i").text().trim();
+  obj.type = $("div:nth-child(2) > a").text().trim();
+  obj.posted_on = $("div:nth-child(5) > i > time").text().trim();
+  obj.last_update = $("div:nth-child(6) > i > time").text().trim();
+  obj.last_chapter = $("div.lastend > div:nth-child(2) > a > span.epcur.epcurlast").text().trim();
+  obj.rating = $("div.rating.bixbox > div > div.num").text().trim();
 
   /* Set Manga Endpoint */
-  obj.manga_endpoint = `https://westmanga.info/manga/${slug}`;
+  obj.manga_endpoint = `https://www.sekaikomik.com/manga/${slug}`;
 
   /* Get Manga Thumbnail */
   obj.thumb = element.find("div.thumb > img").attr("src");
