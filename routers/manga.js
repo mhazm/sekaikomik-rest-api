@@ -81,8 +81,8 @@ router.get("/manga/detail/:slug", async (req, res) => {
   obj.genre_list = genre_list||[];
 
   /* Get Synopsis */
-  const getSinopsis = element.find("div.main-info > div.info-right > div.info-desc.bixbox > div:nth-child(3) > div > p:nth-child(1)").first();
-  obj.synopsis = $(getSinopsis).find("p").text().trim();
+  const getSinopsis = element.find("div.entry-content").first();
+  obj.synopsis = $(getSinopsis).find("p:nth-child(1)").text().trim();
 
   res.status(200).send(obj);
   } catch (error) {
