@@ -56,7 +56,7 @@ router.get("/manga/detail/:slug", async (req, res) => {
   let chapter = [];
   const obj = {};
 
-  /* Get Title, Type, Author, Status */
+  /* Get Title */
   const getMeta = element.find("div.seriestucon").first();
   obj.title = $('div.seriestuheader > h1.entry-title').text().trim();
 
