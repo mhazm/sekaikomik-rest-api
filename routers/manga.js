@@ -24,7 +24,7 @@ router.get("/search/:query", async (req, res) => {
     let title, thumb, endpoint ;
     element.find("div.bsx").each((idx, el) => {
       endpoint = $(el).find("a").attr("href").replace(replaceMangaPage, "").replace('/manga/','');
-      thumb = $(el).find("div.limit > img").attr("src");
+      thumb = $("#content > div.wrapper > div.postbody > div > div.listupd > div > div > a > div.limit > img").attr("src");
       title = $(el).find("a").attr("title");
       manga_list.push({
         title,
