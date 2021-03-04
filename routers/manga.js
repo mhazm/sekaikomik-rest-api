@@ -80,16 +80,6 @@ router.get("/manga/detail/:slug", async (req, res) => {
 
   obj.genre_list = genre_list||[];
 
-  /* GET DOWNLOAD LINK */
-  element.find("div.info-right > div.info-desc.bixbox > div:nth-child(2) > span").each((idx, el) => {
-    let download_link = $(el).find("a").attr("href");
-    let download_judul = $(el).find("a").text();
-    download_list.push({
-      download_judul,
-      download_link,
-    });
-  });
-
   /* Get Synopsis */
   const getSinopsis = element.find("div.entry-content").first();
   obj.synopsis = $(getSinopsis).find("p").text().trim();
